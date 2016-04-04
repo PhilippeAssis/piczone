@@ -1,6 +1,13 @@
 # PicZone
 Crop, scrawls, resize, rotate and upload image. An updated fork and implementation of [andyvr/picEdit](https://github.com/andyvr/picEdit)
 
+## Installation
+###  Borwer
+```bower install piczone```
+### Git clone
+```git clone https://github.com/PhilippeAssis/piczone```
+### Download Master
+[PhilippeAssis/piczone/archive/master.zip](https://github.com/PhilippeAssis/piczone/archive/master.zip)
 
 ## What's new:
 ### i18n
