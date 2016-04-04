@@ -45,3 +45,16 @@ To display the tools in the standard for image top and no hidden them
 ```javascript 
 activeNavBox: true
 ```
+
+## Usage
+Include...
+```javascript
+ $(function () {
+        $('input[type=file]').picZone({
+            activeNavBox: true, //new option
+            lang: 'en' //new option
+        });
+    });
+```
+
+More information on [andyvr/picEdit](https://github.com/andyvr/picEdit)
