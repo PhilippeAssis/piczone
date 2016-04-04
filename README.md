@@ -10,7 +10,7 @@ Just add the files already created or customize
 Add the script language to be defined
 
 ```html 
-<Script type = "text / javascript" src = "i18n / en.i18n.picedit.json.js"> </ script>
+<script type = "text/javascript" src = "i18n/en.i18n.picedit.json.js"> </script>
 ```
 
 Set the language in the 'lang' option 
