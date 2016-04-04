@@ -1,0 +1,33 @@
+{
+  "name": "piczone",
+  "authors": [
+    "Philippe Assis <assis@philippeassis.com>"
+  ],
+  "description": "Crop, scrawls, resize, rotate and upload image. An updated fork and implementation of andyvr/picEdit",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "crop",
+    "edit",
+    "scrawls",
+    "resize",
+    "rotate",
+    "upload",
+    "image",
+    "browser",
+    "canvas",
+    "edit"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery-dist": "^2.1.3"
+  }
+}

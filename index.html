@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Untitled Document</title>
+
+    <link rel="stylesheet" type="text/css" href="css/picedit.css"/>
+
+    <style>
+        .picedit_box {
+            width: 800px;
+            height: 400px;
+        }
+
+    </style>
+
+
+</head>
+<body>
+
+<div style="margin:10% auto 0 auto; display: table;">
+
+    <form action="" method="post" enctype="multipart/form-data" id="xid">
+
+
+        <input type="file" name="thefile" id="thebox">
+
+
+        <div style="margin-top:30px; text-align: center;">
+            <button type="submit">Submit</button>
+        </div>
+
+    </form>
+
+</div>
+
+<script type="text/javascript" src="bower_components/jquery-dist/jquery.min.js"></script>
+<script type="text/javascript" src="i18n/ptbr.i18n.picedit.json.js"></script>
+<script type="text/javascript" src="js/picedit.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#thebox').picEdit({
+            maxWidth: 600,
+            activeNavBox: true,
+            lang: 'ptbr'
+        });
+    });
+</script>
+
+</body>
+</html>
