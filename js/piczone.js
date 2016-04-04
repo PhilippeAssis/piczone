@@ -1,7 +1,7 @@
 /*
- *  Project: PicEdit
- *  Description: Creates an image upload box with tools to edit the image on the front-end before uploading it to the server
- *  Author: Andy V.
+ *  Project: PicZone
+ *  Description: Crop, scrawls, resize, rotate and upload image. An updated fork and implementation of andyvr/picEdit
+ *  Author: Philippe Assis
  *  License: MIT
  */
 
@@ -19,7 +19,7 @@
     // minified (especially when both are regularly referenced in your plugin).
 
     // Create the default params object
-    var pluginName = 'picEdit',
+    var pluginName = 'picZone',
         defaults = {
             imageUpdated: function (img) {
             },	// Image updated callback function
@@ -51,7 +51,7 @@
         this.options = $.extend({}, defaults, options);
 
 
-        if (typeof PICEDIT_I18N == 'undefined' || !PICEDIT_I18N[options.lang]) {
+        if (typeof PICZONE_I18N == 'undefined' || !PICZONE_I18N[options.lang]) {
             this.i18n = {
                 webcamError: "No video source detected! Please allow camera access!",
                 webRTCError: "Sorry, your browser doesn't support WebRTC!",
@@ -63,7 +63,7 @@
             }
         }
         else {
-            this.i18n = PICEDIT_I18N[options.lang];
+            this.i18n = PICZONE_I18N[options.lang];
         }
 
 console.log(this.i18n)
@@ -97,7 +97,7 @@ console.log(this.i18n)
 
             // Save instance of this for inline functions
             var _this = this;
-            // Get type of element to be used (type="file" and type="picedit" are supported)
+            // Get type of element to be used (type="file" and type="piczone" are supported)
             var type = $(this.inputelement).prop("type");
             if (type == "file")
                 this._fileinput = $(this.inputelement);
@@ -117,21 +117,21 @@ console.log(this.i18n)
                 return;
             }
             // Get reference to the main canvas element
-            this._canvas = $(this.element).find(".picedit_canvas > canvas")[0];
+            this._canvas = $(this.element).find(".piczone_canvas > canvas")[0];
             // Create and set the 2d context for the canvas
             this._ctx = this._canvas.getContext("2d");
             // Reference to video elemment holder element
-            this._videobox = $(this.element).find(".picedit_video");
+            this._videobox = $(this.element).find(".piczone_video");
             // Reference to the painter element
-            this._painter = $(this.element).find(".picedit_painter");
+            this._painter = $(this.element).find(".piczone_painter");
             this._painter_canvas = this._painter.children("canvas")[0];
             this._painter_ctx = this._painter_canvas.getContext("2d");
             this._painter_painting = false;
             // Save the reference to the messaging box
-            this._messagebox = $(this.element).find(".picedit_message");
+            this._messagebox = $(this.element).find(".piczone_message");
             this._messagetimeout = false;
             // Reference to the main/top nav buttons holder
-            this._mainbuttons = $(this.element).find(".picedit_action_btns");
+            this._mainbuttons = $(this.element).find(".piczone_action_btns");
             // Size of the viewport to display image (a resized image will be displayed)
             this._viewport = {
                 "width": 0,
@@ -145,8 +145,8 @@ console.log(this.i18n)
                 top: 0,
                 width: 0,
                 height: 0,
-                cropbox: $(this.element).find(".picedit_drag_resize"),
-                cropframe: $(this.element).find(".picedit_drag_resize_box")
+                cropbox: $(this.element).find(".piczone_drag_resize"),
+                cropframe: $(this.element).find(".piczone_drag_resize_box")
             };
             function build_img_from_file(files) {
                 if (!files && !files.length) return;
@@ -167,7 +167,7 @@ console.log(this.i18n)
             }
 
             // Bind file drag-n-drop behavior
-            $(this.element).find(".picedit_canvas_box").on("drop", function (event) {
+            $(this.element).find(".piczone_canvas_box").on("drop", function (event) {
                 event.preventDefault();
                 $(this).removeClass('dragging');
                 var files = (event.dataTransfer || event.originalEvent.dataTransfer).files;
@@ -251,7 +251,7 @@ console.log(this.i18n)
             // Load default image if one is set
             if (this.options.defaultImage) _this.set_default_image(this.options.defaultImage);
         },
-        // Check Browser Capabilities (determine if the picedit should run, or leave the default file-input field)
+        // Check Browser Capabilities (determine if the piczone should run, or leave the default file-input field)
         check_browser_capabilities: function () {
             if (!!window.CanvasRenderingContext2D == false) return false; //check canvas support
             if (!window.FileReader) return false; //check file reader support
@@ -494,7 +494,7 @@ console.log(this.i18n)
             var _this = this;
             var eventbox = this._cropping.cropframe;
             var painter = this._painter;
-            var resizer = this._cropping.cropbox.find(".picedit_drag_resize_box_corner_wrap");
+            var resizer = this._cropping.cropbox.find(".piczone_drag_resize_box_corner_wrap");
             $(window).on("mousedown touchstart", function (e) {
                 var evtpos = (e.clientX) ? e : e.originalEvent.touches[0];
                 _this._cropping.x = evtpos.clientX;
@@ -589,14 +589,14 @@ console.log(this.i18n)
             if (message && message == 1) {
                 this.set_messagebox(this.i18n.imageEmpty);
             }
-            $(this.element).find(".picedit_nav_box").removeClass("active").find(".picedit_element").removeClass("active");
+            $(this.element).find(".piczone_nav_box").removeClass("active").find(".piczone_element").removeClass("active");
         },
         // Paint image on canvas
         _paintCanvas: function () {
             this._canvas.width = this._viewport.width;
             this._canvas.height = this._viewport.height;
             this._ctx.drawImage(this._image, 0, 0, this._viewport.width, this._viewport.height);
-            $(this.element).find(".picedit_canvas").css("display", "block");
+            $(this.element).find(".piczone_canvas").css("display", "block");
         },
         // Helper function to translate crop window size to the actual crop size
         _calculateCropWindow: function () {
@@ -697,10 +697,10 @@ console.log(this.i18n)
             this._setVariable("resize_width", img.width);
             this._setVariable("resize_height", img.height);
         },
-        // Bind click and action callbacks to all buttons with class: ".picedit_control"
+        // Bind click and action callbacks to all buttons with class: ".piczone_control"
         _bindControlButtons: function () {
             var _this = this;
-            $(this.element).find(".picedit_control").bind("click", function () {
+            $(this.element).find(".piczone_control").bind("click", function () {
 
                 // check to see if the element has a data-action attached to it
                 var action = $(this).data("action");
@@ -709,19 +709,19 @@ console.log(this.i18n)
                     _this[action](this);
                 }
                 // handle click actions on top nav buttons
-                else if ($(this).hasClass("picedit_action")) {
-                    $(this).parent(".picedit_element").toggleClass("active").siblings(".picedit_element").removeClass("active");
-                    if ($(this).parent(".picedit_element").hasClass("active"))
-                        $(this).closest(".picedit_nav_box").addClass("active");
+                else if ($(this).hasClass("piczone_action")) {
+                    $(this).parent(".piczone_element").toggleClass("active").siblings(".piczone_element").removeClass("active");
+                    if ($(this).parent(".piczone_element").hasClass("active"))
+                        $(this).closest(".piczone_nav_box").addClass("active");
                     else
-                        $(this).closest(".picedit_nav_box").removeClass("active");
+                        $(this).closest(".piczone_nav_box").removeClass("active");
                 }
             });
         },
         // Bind input elements to the application variables
         _bindInputVariables: function () {
             var _this = this;
-            $(this.element).find(".picedit_input").bind("change keypress paste input", function () {
+            $(this.element).find(".piczone_input").bind("change keypress paste input", function () {
                 // check to see if the element has a data-action attached to it
                 var variable = $(this).data("variable");
                 if (variable) {
@@ -793,14 +793,14 @@ console.log(this.i18n)
         },
         // Prepare the template here
         _template: function () {
-            var template = '<div class="picedit_box"> <div class="picedit_message"> <span class="picedit_control ico-picedit-close" data-action="hide_messagebox"></span> <div><\/div><\/div><div class="picedit_nav_box picedit_gray_gradient %activeNavBox%"> <div class="picedit_pos_elements"><\/div><div class="picedit_nav_elements"><div class="picedit_element"> <span class="picedit_control picedit_action ico-picedit-pencil" title="Pen Tool"></span> <div class="picedit_control_menu"> <div class="picedit_control_menu_container picedit_tooltip picedit_elm_3"> <label class="picedit_colors"> <span title="Black" class="picedit_control picedit_action picedit_black active" data-action="toggle_button" data-variable="pen_color" data-value="black"></span> <span title="Red" class="picedit_control picedit_action picedit_red" data-action="toggle_button" data-variable="pen_color" data-value="red"></span> <span title="Green" class="picedit_control picedit_action picedit_green" data-action="toggle_button" data-variable="pen_color" data-value="green"></span> </label> <label> <span class="picedit_separator"></span> </label> <label class="picedit_sizes"> <span title="Large" class="picedit_control picedit_action picedit_large" data-action="toggle_button" data-variable="pen_size" data-value="16"></span> <span title="Medium" class="picedit_control picedit_action picedit_medium" data-action="toggle_button" data-variable="pen_size" data-value="8"></span> <span title="Small" class="picedit_control picedit_action picedit_small" data-action="toggle_button" data-variable="pen_size" data-value="3"></span> </label> <\/div><\/div><\/div><div class="picedit_element"><span class="picedit_control picedit_action ico-picedit-insertpicture" title="Crop" data-action="crop_open"></span> <\/div><div class="picedit_element"> <span class="picedit_control picedit_action ico-picedit-redo" title="Rotate"></span> <div class="picedit_control_menu"> <div class="picedit_control_menu_container picedit_tooltip picedit_elm_1"> <label> <span>90° CW</span> <span class="picedit_control picedit_action ico-picedit-redo" data-action="rotate_cw"></span> </label> <label> <span>90° CCW</span> <span class="picedit_control picedit_action ico-picedit-undo" data-action="rotate_ccw"></span> </label> <\/div><\/div><\/div><div class="picedit_element"> <span class="picedit_control picedit_action ico-picedit-arrow-maximise" title="Resize"></span> <div class="picedit_control_menu"> <div class="picedit_control_menu_container picedit_tooltip picedit_elm_2"> <label><span class="picedit_control picedit_action ico-picedit-checkmark" data-action="resize_image"></span></label> <label> <span>Width (px)</span> <input type="text" class="picedit_input" data-variable="resize_width" value="0"> </label> <label class="picedit_nomargin"> <span class="picedit_control ico-picedit-link" data-action="toggle_button" data-variable="resize_proportions"></span> </label> <label> <span>Height (px)</span> <input type="text" class="picedit_input" data-variable="resize_height" value="0"> </label> <\/div><\/div><\/div></div></div><div class="picedit_canvas_box"><div class="picedit_painter"><canvas></canvas></div><div class="picedit_canvas"><canvas></canvas></div><div class="picedit_action_btns active"> <div class="picedit_control ico-picedit-picture" data-action="load_image"><\/div><div class="picedit_control ico-picedit-camera" data-action="camera_open"><\/div><div class="center">%info%</div></div></div><div class="picedit_video"> <video autoplay></video><div class="picedit_video_controls"><span class="picedit_control picedit_action ico-picedit-checkmark" data-action="take_photo"></span><span class="picedit_control picedit_action ico-picedit-close" data-action="camera_close"></span><\/div><\/div><div class="picedit_drag_resize"> <div class="picedit_drag_resize_canvas"></div><div class="picedit_drag_resize_box"><div class="picedit_drag_resize_box_corner_wrap"> <div class="picedit_drag_resize_box_corner"></div></div><div class="picedit_drag_resize_box_elements"><span class="picedit_control picedit_action ico-picedit-checkmark" data-action="crop_image"></span><span class="picedit_control picedit_action ico-picedit-close" data-action="crop_close"></span><\/div><\/div></div></div>';
+            var template = '<div class="piczone_box"> <div class="piczone_message"> <span class="piczone_control ico-piczone-close" data-action="hide_messagebox"></span> <div><\/div><\/div><div class="piczone_nav_box piczone_gray_gradient %activeNavBox%"> <div class="piczone_pos_elements"><\/div><div class="piczone_nav_elements"><div class="piczone_element"> <span class="piczone_control piczone_action ico-piczone-pencil" title="Pen Tool"></span> <div class="piczone_control_menu"> <div class="piczone_control_menu_container piczone_tooltip piczone_elm_3"> <label class="piczone_colors"> <span title="Black" class="piczone_control piczone_action piczone_black active" data-action="toggle_button" data-variable="pen_color" data-value="black"></span> <span title="Red" class="piczone_control piczone_action piczone_red" data-action="toggle_button" data-variable="pen_color" data-value="red"></span> <span title="Green" class="piczone_control piczone_action piczone_green" data-action="toggle_button" data-variable="pen_color" data-value="green"></span> </label> <label> <span class="piczone_separator"></span> </label> <label class="piczone_sizes"> <span title="Large" class="piczone_control piczone_action piczone_large" data-action="toggle_button" data-variable="pen_size" data-value="16"></span> <span title="Medium" class="piczone_control piczone_action piczone_medium" data-action="toggle_button" data-variable="pen_size" data-value="8"></span> <span title="Small" class="piczone_control piczone_action piczone_small" data-action="toggle_button" data-variable="pen_size" data-value="3"></span> </label> <\/div><\/div><\/div><div class="piczone_element"><span class="piczone_control piczone_action ico-piczone-insertpicture" title="Crop" data-action="crop_open"></span> <\/div><div class="piczone_element"> <span class="piczone_control piczone_action ico-piczone-redo" title="Rotate"></span> <div class="piczone_control_menu"> <div class="piczone_control_menu_container piczone_tooltip piczone_elm_1"> <label> <span>90° CW</span> <span class="piczone_control piczone_action ico-piczone-redo" data-action="rotate_cw"></span> </label> <label> <span>90° CCW</span> <span class="piczone_control piczone_action ico-piczone-undo" data-action="rotate_ccw"></span> </label> <\/div><\/div><\/div><div class="piczone_element"> <span class="piczone_control piczone_action ico-piczone-arrow-maximise" title="Resize"></span> <div class="piczone_control_menu"> <div class="piczone_control_menu_container piczone_tooltip piczone_elm_2"> <label><span class="piczone_control piczone_action ico-piczone-checkmark" data-action="resize_image"></span></label> <label> <span>Width (px)</span> <input type="text" class="piczone_input" data-variable="resize_width" value="0"> </label> <label class="piczone_nomargin"> <span class="piczone_control ico-piczone-link" data-action="toggle_button" data-variable="resize_proportions"></span> </label> <label> <span>Height (px)</span> <input type="text" class="piczone_input" data-variable="resize_height" value="0"> </label> <\/div><\/div><\/div></div></div><div class="piczone_canvas_box"><div class="piczone_painter"><canvas></canvas></div><div class="piczone_canvas"><canvas></canvas></div><div class="piczone_action_btns active"> <div class="piczone_control ico-piczone-picture" data-action="load_image"><\/div><div class="piczone_control ico-piczone-camera" data-action="camera_open"><\/div><div class="center">%info%</div></div></div><div class="piczone_video"> <video autoplay></video><div class="piczone_video_controls"><span class="piczone_control piczone_action ico-piczone-checkmark" data-action="take_photo"></span><span class="piczone_control piczone_action ico-piczone-close" data-action="camera_close"></span><\/div><\/div><div class="piczone_drag_resize"> <div class="piczone_drag_resize_canvas"></div><div class="piczone_drag_resize_box"><div class="piczone_drag_resize_box_corner_wrap"> <div class="piczone_drag_resize_box_corner"></div></div><div class="piczone_drag_resize_box_elements"><span class="piczone_control piczone_action ico-piczone-checkmark" data-action="crop_image"></span><span class="piczone_control piczone_action ico-piczone-close" data-action="crop_close"></span><\/div><\/div></div></div>';
             var _this = this;
 
             template = template.replace(new RegExp('%activeNavBox%'), (this.options.activeNavBox ? 'active' : ''))
             template = template.replace(new RegExp('%info%'), this.i18n.info)
 
             $(this.inputelement).hide().after(template).each(function () {
-                _this.element = $(_this.inputelement).next(".picedit_box");
+                _this.element = $(_this.inputelement).next(".piczone_box");
                 _this.init();
             });
         }

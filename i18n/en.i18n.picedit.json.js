@@ -1,4 +1,4 @@
-var PICEDIT_I18N = {
+var PICZONE_I18N = {
     'en' : {
         webcamError : "No video source detected! Please allow camera access!",
         webRTCError: "Sorry, your browser doesn't support WebRTC!",

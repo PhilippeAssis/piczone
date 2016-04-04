@@ -2,19 +2,17 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Untitled Document</title>
+    <title>PicZone Demo</title>
 
-    <link rel="stylesheet" type="text/css" href="css/picedit.css"/>
+    <link rel="stylesheet" type="text/css" href="css/piczone.css"/>
 
     <style>
-        .picedit_box {
+        .piczone_box {
             width: 800px;
             height: 400px;
         }
 
     </style>
-
-
 </head>
 <body>
 
@@ -36,13 +34,13 @@
 
 <script type="text/javascript" src="bower_components/jquery-dist/jquery.min.js"></script>
 <script type="text/javascript" src="i18n/ptbr.i18n.picedit.json.js"></script>
-<script type="text/javascript" src="js/picedit.js"></script>
+<script type="text/javascript" src="js/piczone.js"></script>
 <script type="text/javascript">
     $(function () {
-        $('#thebox').picEdit({
+        $('#thebox').picZone({
             maxWidth: 600,
             activeNavBox: true,
-            lang: 'ptbr'
+            lang: 'en'
         });
     });
 </script>
