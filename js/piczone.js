@@ -59,7 +59,10 @@
                 imageEmpty: "Open an image or use your camera to make a photo!",
                 formDataError: "Sorry, the FormData API is not supported!",
                 dataSubmitSuccess: "Data successfully submitted!",
-                dataSubmitError: "Server did not accept data!"
+                dataSubmitError: "Server did not accept data!",
+                pleaseWait : "Please Wait...",
+                working: "Working...",
+                uploaded: "Please Wait... Uploading... %progress%% Uploaded."
             }
         }
         else {
@@ -280,9 +283,9 @@
         // Open a loading spinner message box or working... message box
         set_loading: function (message) {
             if (message && message == 1) {
-                return this.set_messagebox("Working...", false, false);
+                return this.set_messagebox(this.i18n.working, false, false);
             }
-            else return this.set_messagebox("Please Wait...", false, false);
+            else return this.set_messagebox(this.i18n.pleaseWait, false, false);
         },
         // Open message box alert with defined text autohide after number of milliseconds, display loading spinner
         set_messagebox: function (text, autohide, closebutton) {
@@ -762,7 +765,7 @@
                         else var total = Math.ceil(inputblob.size * 1.3);
                         var progress = Math.ceil(((e.loaded) / total) * 100);
                         if (progress > 100) progress = 100;
-                        _this.set_messagebox("Please Wait... Uploading... " + progress + "% Uploaded.", false, false);
+                        _this.set_messagebox(_this.i18n.uploaded.replace("%progress%", progress), false, false);
                     };
                     request.open(_this._theform.prop("method"), _this._theform.prop("action"), true);
                     request.onload = function (e) {
