@@ -35,7 +35,7 @@
             aspectRatio: true,				// Preserve aspect ratio
             defaultImage: false,             		// Default image to be used with the plugin
             defaultMessageTimeout: 3000,			// Default timeout to autohide messages (in milliseconds)
-            activeNavBox: false,
+            activeNavBox: true,
             lang: 'en'
         };
 
