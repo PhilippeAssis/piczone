@@ -7,8 +7,8 @@ var PICZONE_I18N = {
         formDataError: "Lamentamos, mas o API FormData não é suportado!",
         dataSubmitSuccess : "Dados enviado com sucesso!",
         dataSubmitError : "O servidor não aceitou os dados enviados.",
-        pleaseWait : "Porfavor aguarde...",
+        pleaseWait : "Por favor aguarde...",
         working: "Aguarde...",
-        uploaded: "Porfavor aguarde... Carregando... %progress%% carregado."
+        uploaded: "Por favor aguarde... Carregando... %progress%% carregado."
     }
 }
