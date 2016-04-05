@@ -66,9 +66,10 @@
             this.i18n = PICZONE_I18N[options.lang];
         }
 
-console.log(this.i18n)
         this._defaults = defaults;
+
         this._name = pluginName;
+
         // Reference to the loaded image
         this._image = false;
         // Reference to the filename of the loaded image
