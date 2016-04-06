@@ -36,7 +36,8 @@
             defaultImage: false,             		// Default image to be used with the plugin
             defaultMessageTimeout: 3000,			// Default timeout to autohide messages (in milliseconds)
             activeNavBox: true,
-            lang: 'en'
+            lang: 'en',
+            camera: true
         };
 
     // The actual plugin constructor
@@ -60,7 +61,7 @@
                 formDataError: "Sorry, the FormData API is not supported!",
                 dataSubmitSuccess: "Data successfully submitted!",
                 dataSubmitError: "Server did not accept data!",
-                pleaseWait : "Please Wait...",
+                pleaseWait: "Please Wait...",
                 working: "Working...",
                 uploaded: "Please Wait... Uploading... %progress%% Uploaded."
             }
@@ -503,8 +504,10 @@
                 var evtpos = (e.clientX) ? e : e.originalEvent.touches[0];
                 _this._cropping.x = evtpos.clientX;
                 _this._cropping.y = evtpos.clientY;
-                _this._cropping.w = eventbox[0].clientWidth;
-                _this._cropping.h = eventbox[0].clientHeight;
+                if (eventbox[0]) {
+                    _this._cropping.w = eventbox[0].clientWidth;
+                    _this._cropping.h = eventbox[0].clientHeight;
+                }
                 eventbox.on("mousemove touchmove", function (event) {
                     event.stopPropagation();
                     event.preventDefault();
@@ -708,7 +711,7 @@
 
                 // check to see if the element has a data-action attached to it
                 var action = $(this).data("action");
-           
+
                 if (action) {
                     _this[action](this);
                 }
@@ -797,11 +800,55 @@
         },
         // Prepare the template here
         _template: function () {
-            var template = '<div class="piczone_box"> <div class="piczone_message"> <span class="piczone_control ico-piczone-close" data-action="hide_messagebox"></span> <div><\/div><\/div><div class="piczone_nav_box piczone_gray_gradient %activeNavBox%"> <div class="piczone_pos_elements"><\/div><div class="piczone_nav_elements"><div class="piczone_element"> <span class="piczone_control piczone_action ico-piczone-pencil" title="Pen Tool"></span> <div class="piczone_control_menu"> <div class="piczone_control_menu_container piczone_tooltip piczone_elm_3"> <label class="piczone_colors"> <span title="Black" class="piczone_control piczone_action piczone_black active" data-action="toggle_button" data-variable="pen_color" data-value="black"></span> <span title="Red" class="piczone_control piczone_action piczone_red" data-action="toggle_button" data-variable="pen_color" data-value="red"></span> <span title="Green" class="piczone_control piczone_action piczone_green" data-action="toggle_button" data-variable="pen_color" data-value="green"></span> </label> <label> <span class="piczone_separator"></span> </label> <label class="piczone_sizes"> <span title="Large" class="piczone_control piczone_action piczone_large" data-action="toggle_button" data-variable="pen_size" data-value="16"></span> <span title="Medium" class="piczone_control piczone_action piczone_medium" data-action="toggle_button" data-variable="pen_size" data-value="8"></span> <span title="Small" class="piczone_control piczone_action piczone_small" data-action="toggle_button" data-variable="pen_size" data-value="3"></span> </label> <\/div><\/div><\/div><div class="piczone_element"><span class="piczone_control piczone_action ico-piczone-insertpicture" title="Crop" data-action="crop_open"></span> <\/div><div class="piczone_element"> <span class="piczone_control piczone_action ico-piczone-redo" title="Rotate"></span> <div class="piczone_control_menu"> <div class="piczone_control_menu_container piczone_tooltip piczone_elm_1"> <label> <span>90° CW</span> <span class="piczone_control piczone_action ico-piczone-redo" data-action="rotate_cw"></span> </label> <label> <span>90° CCW</span> <span class="piczone_control piczone_action ico-piczone-undo" data-action="rotate_ccw"></span> </label> <\/div><\/div><\/div><div class="piczone_element"> <span class="piczone_control piczone_action ico-piczone-arrow-maximise" title="Resize"></span> <div class="piczone_control_menu"> <div class="piczone_control_menu_container piczone_tooltip piczone_elm_2"> <label><span class="piczone_control piczone_action ico-piczone-checkmark" data-action="resize_image"></span></label> <label> <span>Width (px)</span> <input type="text" class="piczone_input" data-variable="resize_width" value="0"> </label> <label class="piczone_nomargin"> <span class="piczone_control ico-piczone-link" data-action="toggle_button" data-variable="resize_proportions"></span> </label> <label> <span>Height (px)</span> <input type="text" class="piczone_input" data-variable="resize_height" value="0"> </label> <\/div><\/div><\/div></div></div><div class="piczone_canvas_box"><div class="piczone_painter"><canvas></canvas></div><div class="piczone_canvas"><canvas></canvas></div><div class="piczone_action_btns active"> <div class="piczone_control ico-piczone-picture" data-action="load_image"><\/div><div class="piczone_control ico-piczone-camera" data-action="camera_open"><\/div><div class="center">%info%</div></div></div><div class="piczone_video"> <video autoplay></video><div class="piczone_video_controls"><span class="piczone_control piczone_action ico-piczone-checkmark" data-action="take_photo"></span><span class="piczone_control piczone_action ico-piczone-close" data-action="camera_close"></span><\/div><\/div><div class="piczone_drag_resize"> <div class="piczone_drag_resize_canvas"></div><div class="piczone_drag_resize_box"><div class="piczone_drag_resize_box_corner_wrap"> <div class="piczone_drag_resize_box_corner"></div></div><div class="piczone_drag_resize_box_elements"><span class="piczone_control piczone_action ico-piczone-checkmark" data-action="crop_image"></span><span class="piczone_control piczone_action ico-piczone-close" data-action="crop_close"></span><\/div><\/div></div></div>';
+            var template = '<div class="piczone_box"> ' +
+                '<div class="piczone_message"> ' +
+                '<span class="piczone_control ico-piczone-close" data-action="hide_messagebox"></span>' +
+                ' <div><\/div><\/div><div class="piczone_nav_box piczone_gray_gradient %activeNavBox%"> ' +
+                '<div class="piczone_pos_elements"><\/div><div class="piczone_nav_elements"><div class="piczone_element"> ' +
+                '<span class="piczone_control piczone_action ico-piczone-pencil" title="Pen Tool"></span> ' +
+                '<div class="piczone_control_menu"> <div class="piczone_control_menu_container piczone_tooltip piczone_elm_3"> ' +
+                '<label class="piczone_colors"> ' +
+                '<span title="Black" class="piczone_control piczone_action piczone_black active" data-action="toggle_button" data-variable="pen_color" data-value="black"></span> ' +
+                '<span title="Red" class="piczone_control piczone_action piczone_red" data-action="toggle_button" data-variable="pen_color" data-value="red"></span> <span title="Green" class="piczone_control piczone_action piczone_green" data-action="toggle_button" data-variable="pen_color" data-value="green"></span> </label> <label> ' +
+                '<span class="piczone_separator"></span> </label> <label class="piczone_sizes">' +
+                ' <span title="Large" class="piczone_control piczone_action piczone_large" data-action="toggle_button" data-variable="pen_size" data-value="16"></span> ' +
+                '<span title="Medium" class="piczone_control piczone_action piczone_medium" data-action="toggle_button" data-variable="pen_size" data-value="8"></span> ' +
+                '<span title="Small" class="piczone_control piczone_action piczone_small" data-action="toggle_button" data-variable="pen_size" data-value="3"></span> ' +
+                '</label> <\/div><\/div><\/div><div class="piczone_element">' +
+                '<span class="piczone_control piczone_action ico-piczone-insertpicture" title="Crop" data-action="crop_open"></span> <\/div>' +
+                '<div class="piczone_element"> <span class="piczone_control piczone_action ico-piczone-redo" title="Rotate"></span> ' +
+                '<div class="piczone_control_menu"> <div class="piczone_control_menu_container piczone_tooltip piczone_elm_1"> <label> <span>90° CW</span> ' +
+                '<span class="piczone_control piczone_action ico-piczone-redo" data-action="rotate_cw"></span> </label> <label> <span>90° CCW</span> ' +
+                '<span class="piczone_control piczone_action ico-piczone-undo" data-action="rotate_ccw"></span> </label> <\/div><\/div><\/div>' +
+                '<div class="piczone_element"> <span class="piczone_control piczone_action ico-piczone-arrow-maximise" title="Resize"></span> ' +
+                '<div class="piczone_control_menu"> <div class="piczone_control_menu_container piczone_tooltip piczone_elm_2"> <label>' +
+                '<span class="piczone_control piczone_action ico-piczone-checkmark" data-action="resize_image"></span></label> <label> <span>Width (px)</span> ' +
+                '<input type="text" class="piczone_input" data-variable="resize_width" value="0"> </label> <label class="piczone_nomargin"> ' +
+                '<span class="piczone_control ico-piczone-link" data-action="toggle_button" data-variable="resize_proportions"></span> </label> ' +
+                '<label> <span>Height (px)</span> <input type="text" class="piczone_input" data-variable="resize_height" value="0"> ' +
+                '</label> <\/div><\/div><\/div></div></div>' +
+                '<div class="piczone_canvas_box"><div class="piczone_painter">' +
+                '<canvas></canvas></div><div class="piczone_canvas">' +
+                '<canvas></canvas></div><div class="piczone_action_btns active"> ' +
+                '<div class="piczone_control ico-piczone-picture" data-action="load_image">' +
+                '<\/div>' +
+                '%camera%' +
+                '<\/div><div class="center">%info%</div></div></div>' +
+                '<div class="piczone_video"> <video autoplay></video><div class="piczone_video_controls">' +
+                '<span class="piczone_control piczone_action ico-piczone-checkmark" data-action="take_photo">' +
+                '</span>' +
+                '%camera_close%' +
+                '<\/div><\/div><div class="piczone_drag_resize"> ' +
+                '<div class="piczone_drag_resize_canvas"></div><div class="piczone_drag_resize_box"><div class="piczone_drag_resize_box_corner_wrap"> ' +
+                '<div class="piczone_drag_resize_box_corner"></div></div><div class="piczone_drag_resize_box_elements">' +
+                '<span class="piczone_control piczone_action ico-piczone-checkmark" data-action="crop_image"></span>' +
+                '<span class="piczone_control piczone_action ico-piczone-close" data-action="crop_close"></span><\/div><\/div></div></div>';
             var _this = this;
 
             template = template.replace(new RegExp('%activeNavBox%'), (this.options.activeNavBox ? 'active' : ''))
             template = template.replace(new RegExp('%info%'), this.i18n.info)
+            template = template.replace(new RegExp('%camera%'), this.options.camera ? '<div class="piczone_control ico-piczone-camera" data-action="camera_open">' : '');
+            template = template.replace(new RegExp('%camera_close%'), this.options.camera ? '<span class="piczone_control piczone_action ico-piczone-close" data-action="camera_close"></span>' : '');
 
             $(this.inputelement).hide().after(template).each(function () {
                 _this.element = $(_this.inputelement).next(".piczone_box");

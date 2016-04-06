@@ -46,6 +46,14 @@ To display the tools in the standard for image top and no hidden them
 activeNavBox: true
 ```
 
+### Camera
+You can enable or disable the camera button with
+```javascript 
+camera: true
+//or
+camera: false
+```
+
 ## Usage
 Include...
 ```javascript
