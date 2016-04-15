@@ -463,6 +463,7 @@
         },
         crop_open: function () {
             if (!this._image) return this._hideAllNav(1);
+            console.log(this._cropping.cropbox)
             this._cropping.cropbox.addClass("active");
             this._hideAllNav();
         },
@@ -833,7 +834,7 @@
                 '<div class="piczone_control ico-piczone-picture" data-action="load_image">' +
                 '<\/div>' +
                 '%camera%' +
-                '<\/div><div class="center">%info%</div></div></div>' +
+                '<div class="center">%info%</div></div></div>' +
                 '<div class="piczone_video"> <video autoplay></video><div class="piczone_video_controls">' +
                 '<span class="piczone_control piczone_action ico-piczone-checkmark" data-action="take_photo">' +
                 '</span>' +
@@ -848,7 +849,7 @@
             template = template.replace(new RegExp('%activeNavBox%'), (this.options.activeNavBox ? 'active' : ''))
             template = template.replace(new RegExp('%info%'), this.i18n.info)
             template = template.replace(new RegExp('%camera%'), this.options.camera ? '<div class="piczone_control ico-piczone-camera" data-action="camera_open">' : '');
-            template = template.replace(new RegExp('%camera_close%'), this.options.camera ? '<span class="piczone_control piczone_action ico-piczone-close" data-action="camera_close"></span>' : '');
+            template = template.replace(new RegExp('%camera_close%'), this.options.camera ? '' : '');
 
             $(this.inputelement).hide().after(template).each(function () {
                 _this.element = $(_this.inputelement).next(".piczone_box");
